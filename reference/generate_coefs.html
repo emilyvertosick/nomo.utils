@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Title — generate_coefs • nomo.utils</title>
+<title>generate_coefs — generate_coefs • nomo.utils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Title — generate_coefs" />
-<meta property="og:description" content="Title" />
+<meta property="og:title" content="generate_coefs — generate_coefs" />
+<meta property="og:description" content="This function takes a dataframe, a list of covariates and a model type to
+create a model and save out the coefficients for that model" />
 
 
 
@@ -103,31 +104,61 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Title</h1>
+    <h1>generate_coefs</h1>
     
     <div class="hidden name"><code>generate_coefs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Title</p>
+    <p>This function takes a dataframe, a list of covariates and a model type to
+create a model and save out the coefficients for that model</p>
     </div>
 
-    <pre class="usage"><span class='fu'>generate_coefs</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>covars</span>, <span class='va'>modeltype</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>generate_coefs</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  <span class='va'>outcome</span>,
+  <span class='va'>covars</span>,
+  id <span class='op'>=</span> <span class='st'>"id"</span>,
+  model_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"linear"</span>, <span class='st'>"logistic"</span>, <span class='st'>"survival"</span>, <span class='st'>"quantile"</span><span class='op'>)</span>,
+  quantile_tau <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.25</span>, <span class='fl'>0.5</span>, <span class='fl'>0.75</span><span class='op'>)</span>,
+  model_weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  labels <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A dataframe used to create model</p></td>
+      <td><p>Data that will be used to create model</p></td>
+    </tr>
+    <tr>
+      <th>outcome</th>
+      <td><p>The outcome for the model</p></td>
     </tr>
     <tr>
       <th>covars</th>
-      <td><p>List of covariates to be included in model</p></td>
+      <td><p>A vector of covariate names</p></td>
     </tr>
     <tr>
-      <th>modeltype</th>
-      <td><p>Type of model (logistic, survival)</p></td>
+      <th>id</th>
+      <td><p>Name of the variable containing unique identifier</p></td>
+    </tr>
+    <tr>
+      <th>model_type</th>
+      <td><p>Type of model (linear, logistic, survival, quantile)</p></td>
+    </tr>
+    <tr>
+      <th>quantile_tau</th>
+      <td><p>Vector of desired centiles for quantile model</p></td>
+    </tr>
+    <tr>
+      <th>model_weights</th>
+      <td><p>Name of variable containing model weights</p></td>
+    </tr>
+    <tr>
+      <th>labels</th>
+      <td><p>Labels corresponding to covariates in model</p></td>
     </tr>
     </table>
 
@@ -149,7 +180,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by First Last.</p>
+  <p>Developed by Emily Vertosick.</p>
 </div>
 
 <div class="pkgdown">

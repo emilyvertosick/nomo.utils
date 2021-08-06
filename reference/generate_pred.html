@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • nomo.utils</title>
+<title>generate_pred — generate_pred • nomo.utils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="generate_pred — generate_pred" />
+<meta property="og:description" content="This function will take in two dataframes (cohort data and coefficients) and calculate functions for all patients with available data" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -100,48 +101,73 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>generate_pred</h1>
+    
+    <div class="hidden name"><code>generate_pred.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>This function will take in two dataframes (cohort data and coefficients) and calculate functions for all patients with available data</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>generate_pred</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  <span class='va'>coefficients</span>,
+  model_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"linear"</span>, <span class='st'>"logistic"</span>, <span class='st'>"survival"</span>, <span class='st'>"quantile"</span><span class='op'>)</span>,
+  id <span class='op'>=</span> <span class='st'>"id"</span>,
+  covariate <span class='op'>=</span> <span class='st'>"covariate"</span>,
+  value <span class='op'>=</span> <span class='st'>"value"</span>,
+  outcometime <span class='op'>=</span> <span class='fl'>5</span>,
+  starttime <span class='op'>=</span> <span class='fl'>0</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="generate_coefs.html">generate_coefs()</a></code> </p>
-        </td>
-        <td><p>generate_coefs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="generate_pred.html">generate_pred()</a></code> </p>
-        </td>
-        <td><p>generate_pred</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>Data for which predictions will be generated</p></td>
+    </tr>
+    <tr>
+      <th>coefficients</th>
+      <td><p>Dataframe containing model coefficients</p></td>
+    </tr>
+    <tr>
+      <th>model_type</th>
+      <td><p>Type of model (linear, logistic, survival, quantile)</p></td>
+    </tr>
+    <tr>
+      <th>id</th>
+      <td><p>Name of the variable containing unique identifier. Default is "id"</p></td>
+    </tr>
+    <tr>
+      <th>covariate</th>
+      <td><p>Name of the variable in "coefficients" data containing covariate name. Default is "covariate"</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>Name of the variable in the "coefficients" data containing coefficient value. Default is "value"</p></td>
+    </tr>
+    <tr>
+      <th>outcometime</th>
+      <td><p>For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.</p></td>
+    </tr>
+    <tr>
+      <th>starttime</th>
+      <td><p>For survival models, the starting timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 0 years (time of surgery).</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>dataframe</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># add example here</span>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
