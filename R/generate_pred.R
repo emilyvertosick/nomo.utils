@@ -133,7 +133,7 @@ generate_pred <- function(data,
     data %>%
     dplyr::left_join(
       data_pred %>%
-        select(.env$id, .data$risk_xb, .data$risk_pr),
+        select(dplyr::all_of(id), .data$risk_xb, .data$risk_pr),
       by = "id"
     )
 
