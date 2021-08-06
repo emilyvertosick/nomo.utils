@@ -2,22 +2,42 @@
 % Please edit documentation in R/generate_coefs.R
 \name{generate_coefs}
 \alias{generate_coefs}
-\title{Title}
+\title{generate_coefs}
 \usage{
-generate_coefs(data, covars, modeltype)
+generate_coefs(
+  data,
+  outcome,
+  covars,
+  id = "id",
+  model_type = c("linear", "logistic", "survival", "quantile"),
+  quantile_tau = c(0.25, 0.5, 0.75),
+  model_weights = NULL,
+  labels = NULL
+)
 }
 \arguments{
-\item{data}{A dataframe used to create model}
+\item{data}{Data that will be used to create model}
 
-\item{covars}{List of covariates to be included in model}
+\item{outcome}{The outcome for the model}
 
-\item{modeltype}{Type of model (logistic, survival)}
+\item{covars}{A vector of covariate names}
+
+\item{id}{Name of the variable containing unique identifier}
+
+\item{model_type}{Type of model (linear, logistic, survival, quantile)}
+
+\item{quantile_tau}{Vector of desired centiles for quantile model}
+
+\item{model_weights}{Name of variable containing model weights}
+
+\item{labels}{Labels corresponding to covariates in model}
 }
 \value{
 dataframe
 }
 \description{
-Title
+This function takes a dataframe, a list of covariates and a model type to
+create a model and save out the coefficients for that model
 }
 \examples{
 # add example here
