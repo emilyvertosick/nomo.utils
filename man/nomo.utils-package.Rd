@@ -6,7 +6,8 @@
 \alias{nomo.utils-package}
 \title{nomo.utils: Utility Functions for nomo Package}
 \description{
-This package contains utility functions related to the nomo package.
+This package contains utility functions related to the nomo
+    package.
 }
 \author{
 \strong{Maintainer}: Emily Vertosick \email{vertosie@mskcc.org} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
