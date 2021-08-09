@@ -116,15 +116,19 @@ generate_pred <- function(data,
   data_pred <-
     data_pred %>%
     mutate(
-      risk_xb = eval(parse(text = model_formula)),
-      risk_pr =
+      # Linear predictor - for linear/quantile, this is all that will be kept
+      pred_xb = eval(parse(text = model_formula)),
+      # Event probability - for logistic/survival, otherwise NA for linear/quantile
+      event_pr =
         case_when(
-          model_type == "linear" ~ .data$risk_xb,
-          model_type == "logistic" ~ exp(.data$risk_xb) / (1 + exp(.data$risk_xb)),
+          # Logistic model - this code gives event probability, also calculate non-event probability
+          model_type == "logistic" ~ exp(.data$pred_xb) / (1 + exp(.data$pred_xb)),
+          # Survival model - updated code to give event probability, will calculate non-event/survival separately
           model_type == "survival" ~
-            (1 + (exp(-1 * .data$risk_xb) * starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$risk_xb) * outcometime) ^ (1 / scaling)),
-          model_type == "quantile" ~ .data$risk_xb
-        )
+            1 - ((1 + (exp(-1 * .data$pred_xb) * starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * outcometime) ^ (1 / scaling)))
+        ),
+      # Non-event/survival probability - not needed for linear/quantile
+      nonevent_pr = 1 - .data$event_pr
     )
 
   # Merge this data in with original patient dataset, so we are returning all
@@ -133,7 +137,9 @@ generate_pred <- function(data,
     data %>%
     dplyr::left_join(
       data_pred %>%
-        select(dplyr::all_of(id), .data$risk_xb, .data$risk_pr),
+        select(dplyr::all_of(id), .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
+        # Drop variables if all NA (event_pr/nonevent_pr for linear/quantile models)
+        select(where(~ !all(is.na(.x)))),
       by = "id"
     )
 

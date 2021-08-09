@@ -9,6 +9,7 @@
 
 # allowing for the use of the dot when piping
 utils::globalVariables(".")
+utils::globalVariables("where")
 
 # The following block is used by usethis to automatically manage
 # roxygen namespace tags. Modify with care!

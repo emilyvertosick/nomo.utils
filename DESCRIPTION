@@ -7,7 +7,8 @@ Authors@R:
            role = c("aut", "cre"),
            email = "vertosie@mskcc.org",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This package contains utility functions related to the nomo package.
+Description: This package contains utility functions related to the nomo
+    package.
 License: MIT + file LICENSE
 Imports: 
     broom (>= 0.7.9),
