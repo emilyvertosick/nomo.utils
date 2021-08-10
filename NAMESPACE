@@ -2,6 +2,7 @@
 
 export(generate_coefs)
 export(generate_pred)
+export(push_final_results)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,case_when)
 importFrom(dplyr,filter)
