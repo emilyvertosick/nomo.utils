@@ -19,9 +19,9 @@ push_final_results(
 
 \item{dest_subdir}{The name of the subdirectory into which the source files should be moved. Default is NULL}
 
-\item{source_files}{A vector/list(?) of files to be moved from the source repository to the destination repository}
+\item{source_files}{A vector of files to be moved from the source repository to the destination repository}
 
-\item{commit_message}{Message to attach to the commits for both source and destination repository}
+\item{commit_message}{Message to attach to the commits for both source and destination repository (optional)}
 }
 \value{
 
@@ -33,6 +33,5 @@ source repository to the destination repository. After files are copied, they ar
 destination repository.
 }
 \examples{
-
 
 }

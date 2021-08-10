@@ -8,8 +8,8 @@
 #' @param source_repo The file path for the git repository that is the source of the files
 #' @param dest_repo The file path for the destination git repository
 #' @param dest_subdir The name of the subdirectory into which the source files should be moved. Default is NULL
-#' @param source_files A vector/list(?) of files to be moved from the source repository to the destination repository
-#' @param commit_message Message to attach to the commits for both source and destination repository
+#' @param source_files A vector of files to be moved from the source repository to the destination repository
+#' @param commit_message Message to attach to the commits for both source and destination repository (optional)
 #'
 #' @return
 #' @export
@@ -24,9 +24,6 @@ push_final_results <-
     source_files,
     commit_message = paste("source repo to destination repo", Sys.Date())
   ) {
-
-
-    # TODO: Add checks to confirm filepathworks
     # Convert file paths
 
     # Convert strings to file path
@@ -102,7 +99,5 @@ push_final_results <-
 
     # Push files to results repo
     gert::git_push(repo = dest_repo)
-
-    # TODO: Add some kind of confirmatory message?
 
   }
