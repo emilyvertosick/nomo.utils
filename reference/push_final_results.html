@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • nomo.utils</title>
+<title>push_final_results — push_final_results • nomo.utils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,11 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="push_final_results — push_final_results" />
+<meta property="og:description" content="This function takes a source repository, a destination repository, and a list of files to be copied
+It commits and pushes any changes to the source repository, and then copies the files from the
+source repository to the destination repository. After files are copied, they are staged, committed and pushed to the
+destination repository." />
 
 
 
@@ -58,7 +62,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -100,54 +104,63 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>push_final_results</h1>
+    
+    <div class="hidden name"><code>push_final_results.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>This function takes a source repository, a destination repository, and a list of files to be copied
+It commits and pushes any changes to the source repository, and then copies the files from the
+source repository to the destination repository. After files are copied, they are staged, committed and pushed to the
+destination repository.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>push_final_results</span><span class='op'>(</span>
+  <span class='va'>source_repo</span>,
+  <span class='va'>dest_repo</span>,
+  dest_subdir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>source_files</span>,
+  commit_message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"source repo to destination repo"</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="generate_coefs.html">generate_coefs()</a></code> </p>
-        </td>
-        <td><p>generate_coefs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="generate_pred.html">generate_pred()</a></code> </p>
-        </td>
-        <td><p>generate_pred</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="push_final_results.html">push_final_results()</a></code> </p>
-        </td>
-        <td><p>push_final_results</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>source_repo</th>
+      <td><p>The file path for the git repository that is the source of the files</p></td>
+    </tr>
+    <tr>
+      <th>dest_repo</th>
+      <td><p>The file path for the destination git repository</p></td>
+    </tr>
+    <tr>
+      <th>dest_subdir</th>
+      <td><p>The name of the subdirectory into which the source files should be moved. Default is NULL</p></td>
+    </tr>
+    <tr>
+      <th>source_files</th>
+      <td><p>A vector of files to be moved from the source repository to the destination repository</p></td>
+    </tr>
+    <tr>
+      <th>commit_message</th>
+      <td><p>Message to attach to the commits for both source and destination repository (optional)</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    
+
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
