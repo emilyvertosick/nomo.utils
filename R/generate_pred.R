@@ -94,7 +94,7 @@ generate_pred <- function(data,
   data_pred <-
     data %>%
     # Keep only covariates + id variable
-    select(dplyr::one_of(id), dplyr::all_of(covariates)) %>%
+    select(.env$id, dplyr::all_of(covariates)) %>%
     # Keep only complete cases (will merge with main data later)
     filter(complete.cases(.)) %>%
     # Create variable for intercept
@@ -134,10 +134,10 @@ generate_pred <- function(data,
     data %>%
     dplyr::left_join(
       data_pred %>%
-        select(dplyr::all_of(id), .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
+        select(.env$id, .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
         # Drop variables if all NA (event_pr/nonevent_pr for linear/quantile models)
         select(where(~ !all(is.na(.x)))),
-      by = "id"
+      by = .env$id
     )
 
   # Return final dataframe
