@@ -122,7 +122,7 @@ generate_pred <- function(data,
           model_type == "logistic" ~ exp(.data$pred_xb) / (1 + exp(.data$pred_xb)),
           # Survival model - updated code to give event probability, will calculate non-event/survival separately
           model_type == "survival" ~
-            1 - ((1 + (exp(-1 * .data$pred_xb) * starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * outcometime) ^ (1 / scaling)))
+            1 - ((1 + (exp(-1 * .data$pred_xb) * .env$starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * .env$outcometime) ^ (1 / scaling)))
         ),
       # Non-event/survival probability - not needed for linear/quantile
       nonevent_pr = 1 - .data$event_pr

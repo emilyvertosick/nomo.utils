@@ -194,3 +194,66 @@ test_that("error if value variable is not numeric", {
 
 })
 
+test_that("predictions are different if different outcome times given", {
+
+  mtcars_outcome <-
+    generate_pred(
+      data = mtcars_id,
+      coefficients = mtcars_survival,
+      model_type = "survival",
+      id = "id",
+      covariate = "covariate",
+      value = "value",
+      outcometime = 10
+    ) %>%
+    select(id, event_pr10 = event_pr) %>%
+    dplyr::left_join(
+      generate_pred(
+        data = mtcars_id,
+        coefficients = mtcars_survival,
+        model_type = "survival",
+        id = "id",
+        covariate = "covariate",
+        value = "value",
+        outcometime = 15
+      ) %>%
+        select(id, event_pr15 = event_pr),
+      by = "id"
+    )
+
+  expect_false(all(mtcars_outcome$event_pr10 == mtcars_outcome$event_pr15, na.rm = TRUE))
+
+})
+
+test_that("predictions are different if different start times given", {
+
+  mtcars_start <-
+    generate_pred(
+      data = mtcars_id,
+      coefficients = mtcars_survival,
+      model_type = "survival",
+      id = "id",
+      covariate = "covariate",
+      value = "value",
+      starttime = 5,
+      outcometime = 15
+    ) %>%
+    select(id, event_pr5 = event_pr) %>%
+    dplyr::left_join(
+      generate_pred(
+        data = mtcars_id,
+        coefficients = mtcars_survival,
+        model_type = "survival",
+        id = "id",
+        covariate = "covariate",
+        value = "value",
+        starttime = 10,
+        outcometime = 15
+      ) %>%
+        select(id, event_pr10 = event_pr),
+      by = "id"
+    )
+
+  expect_false(all(mtcars_start$event_pr5 == mtcars_start$event_pr10, na.rm = TRUE))
+
+})
