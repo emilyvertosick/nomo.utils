@@ -96,8 +96,10 @@ generate_coefs <- function(data,
 
   # Confirm enough observations (at least 10)
   if(nrow(model_data) < 10) {
-    stop(glue("There are less than 10 observations, no model will be created."),
+    warning(glue("There are less than 10 observations, no model will be created."),
          call. = FALSE)
+    regression_coefs <- tibble(status = "No model: <10 observations")
+    return(regression_coefs)
   }
 
   # LINEAR MODELS #
@@ -133,8 +135,10 @@ generate_coefs <- function(data,
     min_event_n <-
       min(model_data %>% pull(outcome) %>% table(), na.rm = TRUE)
     if(min_event_n < length(covars)*10) {
-      stop(glue("Only {min_event_n} events for {length(covars)} covariates"),
+      warning(glue("Only {min_event_n} events for {length(covars)} covariates"),
            call. = FALSE)
+      regression_coefs <- tibble(status = "No model: {min_event_n} events for {length(covars)} covariates")
+      return(regression_coefs)
     }
 
     # Create formula
@@ -184,15 +188,20 @@ generate_coefs <- function(data,
     }
 
     # Confirm enough events or non-events
-    event_n <-
-      model_data %>%
-      # TODO: Okay to use "get" here or is there a better way? .env$outcome[2]??
-      dplyr::summarize(sum = sum(get(outcome[2]), na.rm = TRUE)) %>%
-      pull()
+    # event_n <-
+    #   model_data %>%
+    #   # TODO: Okay to use "get" here or is there a better way? .env$outcome[2]??
+    #   dplyr::summarize(sum = sum(get(outcome[2]), na.rm = TRUE)) %>%
+    #   pull()
 
-    if(event_n < length(covars)*10) {
-      stop(glue("Only {event_n} events for {length(covars)} covariates",
-                call. = FALSE))
+    min_event_n <-
+      min(model_data %>% pull(.env$outcome[[2]]) %>% table(), na.rm = TRUE)
+
+    if(min_event_n < length(covars)*10) {
+      warning(glue("Only {min_event_n} events for {length(covars)} covariates"),
+              call. = FALSE)
+      regression_coefs <- tibble(status = "No model: {min_event_n} events for {length(covars)} covariates")
+      return(regression_coefs)
     }
 
     # Create formula

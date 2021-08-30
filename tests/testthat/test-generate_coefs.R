@@ -205,7 +205,7 @@ test_that("survival and logistic outcomes have 2 levels", {
 # no models with < 10 observations
 test_that("no models with < 10 observations", {
 
-  expect_error(
+  expect_warning(
     generate_coefs(
       data = mtcars_id %>% dplyr::slice(1:9),
       outcome = "mpg",
@@ -220,7 +220,7 @@ test_that("no models with < 10 observations", {
 
 test_that("no models with more variables than necessary events", {
 
-  expect_error(
+  expect_warning(
     generate_coefs(
       data = mtcars_id %>% dplyr::slice(1:20),
       outcome = "am",
