@@ -6,7 +6,7 @@
 #'
 #' @param data Data that will be used to create model
 #' @param outcome The outcome for the model
-#' @param covars A vector of covariate names
+#' @param covars A vector of covariate names. If NULL, a null model (no covariates) will be created.
 #' @param id Name of the variable containing unique identifier
 #' @param model_type Type of model (linear, logistic, survival, quantile)
 #' @param quantile_tau Vector of desired centiles for quantile model
@@ -20,7 +20,7 @@
 #' # add example here
 generate_coefs <- function(data,
                            outcome,
-                           covars,
+                           covars = NULL,
                            id = "id",
                            model_type = c("linear", "logistic", "survival", "quantile"),
                            quantile_tau = c(0.25, 0.5, 0.75), # TODO: How to pass vector?
@@ -39,7 +39,7 @@ generate_coefs <- function(data,
          call. = FALSE)
 
     # Confirm covariates exist in dataframe
-  } else if (!all(covars %in% names(data))) {
+  } else if (!(all(covars %in% names(data))) & !is.null(covars)) {
 
     stop("Check that the covariates exist in the dataframe provided.",
          call. = FALSE)
@@ -84,6 +84,11 @@ generate_coefs <- function(data,
            call. = FALSE)
 
     }
+  }
+
+  # Covariates setup for null models
+  if(is.null(covars)) {
+    covars <- c(1)
   }
 
   # Data setup

@@ -7,7 +7,7 @@
 generate_coefs(
   data,
   outcome,
-  covars,
+  covars = NULL,
   id = "id",
   model_type = c("linear", "logistic", "survival", "quantile"),
   quantile_tau = c(0.25, 0.5, 0.75),
@@ -20,7 +20,7 @@ generate_coefs(
 
 \item{outcome}{The outcome for the model}
 
-\item{covars}{A vector of covariate names}
+\item{covars}{A vector of covariate names. If NULL, a null model (no covariates) will be created.}
 
 \item{id}{Name of the variable containing unique identifier}
 
