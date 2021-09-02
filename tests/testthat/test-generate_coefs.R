@@ -59,6 +59,60 @@ test_that("function works correctly for all model types", {
 
 })
 
+test_that("function works correctly for all model types when no covariates specified", {
+
+  # linear
+  expect_error(
+    generate_coefs(
+      data = mtcars_id,
+      outcome = "mpg",
+      covars = NULL,
+      id = "id",
+      model_type = "linear",
+      labels = NULL
+    ),
+    NA
+  )
+
+  # logistic
+  expect_error(
+    generate_coefs(
+      data = mtcars_id,
+      outcome = "am",
+      id = "id",
+      model_type = "logistic",
+      labels = c("")
+    ),
+    NA
+  )
+
+  # survival
+  expect_error(
+    generate_coefs(
+      data = mtcars_id,
+      outcome = c("qsec", "am"),
+      covars = character(0),
+      id = "id",
+      model_type = "survival"
+    ),
+    NA
+  )
+
+  # quantile
+  expect_error(
+    generate_coefs(
+      data = mtcars_id,
+      outcome = c("mpg"),
+      covars = NULL,
+      id = "id",
+      model_type = "quantile",
+      quantile_tau = c(0.5)
+    ),
+    NA
+  )
+
+})
+
 test_that("non-required options work correctly", {
 
   # model weights
@@ -137,6 +191,34 @@ test_that("error if input does not exist", {
       id = "id",
       model_type = "linear",
       model_weights = "weight2"
+    ),
+    "*"
+  )
+
+})
+
+test_that("error if passing blank string as covariates", {
+
+  expect_error(
+    generate_coefs(
+      data = mtcars_id,
+      outcome = "am",
+      covars = c("", ""),
+      id = "id",
+      model_type = "logistic",
+      labels = c("")
+    ),
+    "*"
+  )
+
+  expect_error(
+    generate_coefs(
+      data = mtcars_id,
+      outcome = "am",
+      covars = "",
+      id = "id",
+      model_type = "logistic",
+      labels = c("")
     ),
     "*"
   )

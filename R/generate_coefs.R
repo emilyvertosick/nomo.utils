@@ -32,16 +32,29 @@ generate_coefs <- function(data,
 
   # Input checks
 
+  # If no covariates, use "1" to create null model
+  if (rlang::is_empty(covars) == TRUE) {
+
+    covars <- c(1)
+
+    # If only passed a blank string or vector of blank strings, give an error
+
+  } else if (rlang::is_empty(covars) == FALSE & all(covars == "")) {
+
+    stop("Do not pass a vector of empty strings as covariates. If no covariates will be used, the 'covars' option should be NULL.",
+         call. = FALSE)
+
+    # Otherwise, confirm covariates exist in dataframe
+  } else if (rlang::is_empty(covars) == FALSE & !(all(covars %in% names(data)))) {
+
+    stop("Check that the covariates exist in the dataframe provided.",
+         call. = FALSE)
+  }
+
   # Confirm outcome exists in dataframe
   if (!all(outcome %in% names(data))) {
 
     stop("Check that the outcome exists in the dataframe provided.",
-         call. = FALSE)
-
-    # Confirm covariates exist in dataframe
-  } else if (!(all(covars %in% names(data))) & !is.null(covars)) {
-
-    stop("Check that the covariates exist in the dataframe provided.",
          call. = FALSE)
 
     # Check that id variable exists in dataframe
@@ -86,11 +99,6 @@ generate_coefs <- function(data,
     }
   }
 
-  # Covariates setup for null models
-  if(is.null(covars)) {
-    covars <- c(1)
-  }
-
   # Data setup
   model_data <-
     data %>%
@@ -102,7 +110,7 @@ generate_coefs <- function(data,
   # Confirm enough observations (at least 10)
   if(nrow(model_data) < 10) {
     warning(glue("There are less than 10 observations, no model will be created."),
-         call. = FALSE)
+            call. = FALSE)
     regression_coefs <- tibble(status = "No model: <10 observations")
     return(regression_coefs)
   }
@@ -141,7 +149,7 @@ generate_coefs <- function(data,
       min(model_data %>% pull(outcome) %>% table(), na.rm = TRUE)
     if(min_event_n < length(covars)*10) {
       warning(glue("Only {min_event_n} events for {length(covars)} covariates"),
-           call. = FALSE)
+              call. = FALSE)
       regression_coefs <- tibble(status = "No model: {min_event_n} events for {length(covars)} covariates")
       return(regression_coefs)
     }
@@ -304,7 +312,7 @@ generate_coefs <- function(data,
     dplyr::bind_rows(regression_stats)
 
   # Add variable labels, if specified
-  if(!is.null(labels)) {
+  if(rlang::is_empty(covars) == FALSE & !is.null(labels)) {
     regression_coefs <-
       regression_coefs %>%
       dplyr::left_join(
