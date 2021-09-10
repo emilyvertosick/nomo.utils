@@ -33,9 +33,11 @@ generate_coefs <- function(data,
   # Input checks
 
   # If no covariates, use "1" to create null model
+  # Also set labels to NULL to avoid any issues
   if (rlang::is_empty(covars) == TRUE) {
 
     covars <- c(1)
+    labels <- NULL
 
     # If only passed a blank string or vector of blank strings, give an error
 
