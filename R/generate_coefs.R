@@ -111,10 +111,22 @@ generate_coefs <- function(data,
 
   # Confirm enough observations (at least 10)
   if(nrow(model_data) < 10) {
-    warning(glue("There are less than 10 observations, no model will be created."),
+    warning("There are less than 10 observations, no model will be created.",
             call. = FALSE)
     regression_coefs <- tibble(status = "No model: <10 observations")
     return(regression_coefs)
+  }
+
+  # If there is only one outcome level (no events or no non-events), no error but no model
+  if(length(model_data %>% pull(outcome[1]) %>% unique()) == 1) {
+    warning(glue("There is only one level of the outcome variable ",
+                 "({outcome[1]} = {model_data %>% pull(outcome[1]) %>% unique()}), ",
+                 "no model will be created."),
+            call. = FALSE)
+    regression_coefs <-
+      tibble(status = glue("No model: one outcome level ({outcome[1]} = {model_data %>% pull(outcome[1]) %>% unique()})"))
+    return(regression_coefs)
+
   }
 
   # LINEAR MODELS #

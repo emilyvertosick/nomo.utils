@@ -256,6 +256,22 @@ test_that("labels and covars must be the same length", {
 
 })
 
+# warning if only one outcome level
+test_that("warning if only one outcome level", {
+
+  expect_warning(
+    generate_coefs(
+      data = mtcars_id %>% mutate(gear = 4),
+      outcome = "gear",
+      covars = c("cyl"),
+      id = "id",
+      model_type = "logistic"
+    ),
+    "*"
+  )
+
+})
+
 # survival and logistic outcomes must have 2 levels
 test_that("survival and logistic outcomes have 2 levels", {
 
