@@ -164,7 +164,7 @@ generate_coefs <- function(data,
     if(min_event_n < length(covars)*10) {
       warning(glue("Only {min_event_n} events for {length(covars)} covariates"),
               call. = FALSE)
-      regression_coefs <- tibble(status = "No model: {min_event_n} events for {length(covars)} covariates")
+      regression_coefs <- tibble(status = glue("No model: {min_event_n} events for {length(covars)} covariates"))
       return(regression_coefs)
     }
 
@@ -227,7 +227,7 @@ generate_coefs <- function(data,
     if(min_event_n < length(covars)*10) {
       warning(glue("Only {min_event_n} events for {length(covars)} covariates"),
               call. = FALSE)
-      regression_coefs <- tibble(status = "No model: {min_event_n} events for {length(covars)} covariates")
+      regression_coefs <- tibble(status = glue("No model: {min_event_n} events for {length(covars)} covariates"))
       return(regression_coefs)
     }
 
