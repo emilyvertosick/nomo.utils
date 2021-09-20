@@ -131,13 +131,16 @@ generate_pred <- function(data,
   # Merge this data in with original patient dataset, so we are returning all
   # patients, even though some patients may not have a prediction
   data_final <-
-    data %>%
-    dplyr::left_join(
-      data_pred %>%
-        select(.env$id, .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
-        # Drop variables if all NA (event_pr/nonevent_pr for linear/quantile models)
-        select(where(~ !all(is.na(.x)))),
-      by = .env$id
+    # suppress "by = " message - we are specifying "by" here so no need for message
+    suppressMessages(
+      data %>%
+        dplyr::left_join(
+          data_pred %>%
+            select(.env$id, .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
+            # Drop variables if all NA (event_pr/nonevent_pr for linear/quantile models)
+            select(where(~ !all(is.na(.x)))),
+          by = .env$id
+        )
     )
 
   # Return final dataframe
