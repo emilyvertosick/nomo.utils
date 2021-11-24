@@ -37,6 +37,10 @@ dataframe
 }
 \description{
 This function will take in two dataframes (cohort data and coefficients) and calculate functions for all patients with available data
+This function generates the following variables:
+\code{pred_xb}: For linear and quantile regression, this is the predicted value. For logistic and survival analysis, this is the linear predictor.
+\code{event_pr}: For logistic and survival analysis, this is the predicted probability of the event (at the specified timepoint, for survival models). For linear and quantile regression, this is not generated.
+\code{nonevent_pr}: For logistic and survival analysis, this is the predicted probability of not having the event (survival probability at the specified timepoint, for survival models). For linear and quantile regression, this is not generated.
 }
 \examples{
 # add example here

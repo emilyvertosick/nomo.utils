@@ -2,6 +2,10 @@
 #' generate_pred
 #'
 #' This function will take in two dataframes (cohort data and coefficients) and calculate functions for all patients with available data
+#' This function generates the following variables:
+#' `pred_xb`: For linear and quantile regression, this is the predicted value. For logistic and survival analysis, this is the linear predictor.
+#' `event_pr`: For logistic and survival analysis, this is the predicted probability of the event (at the specified timepoint, for survival models). For linear and quantile regression, this is not generated.
+#' `nonevent_pr`: For logistic and survival analysis, this is the predicted probability of not having the event (survival probability at the specified timepoint, for survival models). For linear and quantile regression, this is not generated.
 #'
 #' @param data Data for which predictions will be generated
 #' @param coefficients Dataframe containing model coefficients
