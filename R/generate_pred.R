@@ -51,6 +51,29 @@ generate_pred <- function(data,
     # Drop AUC, C-index, Scaling Parameter, Model N
     filter(!(.data$covariate_name %in% c("C-index", "AUC", "Scaling Parameter", "Model N")))
 
+  # Do any coefficients have an NA value? If so, remove and print a warning
+  if (any(is.na(coefficients_pred$coef_value))) {
+
+    # Identify covariates with NA values
+    covar_na_list <-
+      coefficients_pred %>%
+      filter(is.na(coef_value)) %>%
+      pull(covariate_name)
+
+    # Print a warning
+    warning(glue("The following covariates have an NA value for the model coefficient: ",
+                     glue::glue_collapse(covar_na_list, sep = ", ", last = "and"),
+                 ". Predictions will be calculated excluding these covariates."
+                 ),
+            call. = FALSE)
+
+    # Save out coefficients_pred without NA values
+    coefficients_pred <-
+      coefficients_pred %>%
+      filter(!is.na(coef_value))
+
+  }
+
   # Save out list of covariate names for data check
   covariates <-
     coefficients_pred %>%

@@ -1,5 +1,6 @@
 
 # Create data for test
+
 mtcars_id <-
   mtcars %>%
   dplyr::mutate(
@@ -8,6 +9,7 @@ mtcars_id <-
   )
 
 # Create coefficients to pass to generate_pred for tests
+
 mtcars_linear <-
   generate_coefs(
     data = mtcars_id,
@@ -184,6 +186,23 @@ test_that("error if value variable is not numeric", {
     generate_pred(
       data = mtcars_id,
       coefficients = mtcars_linear %>% mutate(value = as.character(value)),
+      model_type = "linear",
+      id = "id",
+      covariate = "covariate",
+      value = "value"
+    ),
+    "*"
+  )
+
+})
+
+test_that("warning if any NA values for coefficients", {
+
+  expect_warning(
+    generate_pred(
+      data = mtcars_id,
+      coefficients = mtcars_linear %>%
+        mutate(value = case_when(covariate != "cyl" ~ value)),
       model_type = "linear",
       id = "id",
       covariate = "covariate",
