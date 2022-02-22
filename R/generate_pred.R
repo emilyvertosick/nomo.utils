@@ -163,10 +163,12 @@ generate_pred <- function(data,
       data %>%
         dplyr::left_join(
           data_pred %>%
-            select(.env$id, .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
+            select(.env$id, pred_xb, event_pr, nonevent_pr) %>%
+            #select(.env$id, .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
             # Drop variables if all NA (event_pr/nonevent_pr for linear/quantile models)
             select(where(~ !all(is.na(.x)))),
-          by = .env$id
+          #by = .env$id
+          by = id
         )
     )
 
