@@ -13,8 +13,11 @@
 #' @param id Name of the variable containing unique identifier. Default is "id"
 #' @param covariate Name of the variable in "coefficients" data containing covariate name. Default is "covariate"
 #' @param value Name of the variable in the "coefficients" data containing coefficient value. Default is "value"
-#' @param outcometime For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.
+#' @param pred_xb Name for the linear predictor variable in the returned dataframe. Default is "pred_xb"
+#' @param event_pr Name for the event probability variable in the returned dataframe. Default is "event_pr"
+#' @param nonevent_pr Name for the non-event probability variable in the returned dataframe. Default is "nonevent_pr"
 #' @param starttime For survival models, the starting timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 0 years (time of surgery).
+#' @param outcometime For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.
 #'
 #' @return dataframe
 #' @export
@@ -27,8 +30,11 @@ generate_pred <- function(data,
                           id = "id",
                           covariate = "covariate",
                           value = "value",
-                          outcometime = 5,
-                          starttime = 0) {
+                          pred_xb = "pred_xb",
+                          event_pr = "event_pr",
+                          nonevent_pr = "nonevent_pr",
+                          starttime = 0,
+                          outcometime = 5) {
 
   # model_type can be passed in any case
   model_type <- tolower(model_type)
@@ -38,6 +44,17 @@ generate_pred <- function(data,
     stop(glue("'{covariate}' does not exist in the coefficients data"), call. = FALSE)
   } else if(!(value %in% names(coefficients))) {
     stop(glue("'{value}' does not exist in the coefficients data"), call. = FALSE)
+  }
+
+  # Confirm predicted final variables don't already exist in dataframe
+  if(length(intersect(dplyr::all_of(c(pred_xb, event_pr, nonevent_pr)), names(data))) != 0) {
+    stop(glue("Variables named ",
+              "{glue::glue_collapse(
+              intersect(dplyr::all_of(c(pred_xb, event_pr, nonevent_pr)), names(data)),
+              sep = ', ',
+              last = ' and ')} ",
+              "already exist in this dataset. Please choose different names for the output variables."),
+         call. = FALSE)
   }
 
   # Rename variables if necessary
@@ -57,8 +74,8 @@ generate_pred <- function(data,
     # Identify covariates with NA values
     covar_na_list <-
       coefficients_pred %>%
-      filter(is.na(coef_value)) %>%
-      pull(covariate_name)
+      filter(is.na(.data$coef_value)) %>%
+      pull(.data$covariate_name)
 
     # Print a warning
     warning(glue("The following covariates have an NA value for the model coefficient: ",
@@ -70,7 +87,7 @@ generate_pred <- function(data,
     # Save out coefficients_pred without NA values
     coefficients_pred <-
       coefficients_pred %>%
-      filter(!is.na(coef_value))
+      filter(!is.na(.data$coef_value))
 
   }
 
@@ -149,11 +166,16 @@ generate_pred <- function(data,
           model_type == "logistic" ~ exp(.data$pred_xb) / (1 + exp(.data$pred_xb)),
           # Survival model - updated code to give event probability, will calculate non-event/survival separately
           model_type == "survival" ~
-            1 - ((1 + (exp(-1 * .data$pred_xb) * .env$starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * .env$outcometime) ^ (1 / scaling)))
+        1 - ((1 + (exp(-1 * .data$pred_xb) * .env$starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * .env$outcometime) ^ (1 / scaling)))
         ),
       # Non-event/survival probability - not needed for linear/quantile
       nonevent_pr = 1 - .data$event_pr
-    )
+    ) %>%
+    # Keep only necessary variables
+    select(dplyr::all_of(c(id, "pred_xb", "event_pr", "nonevent_pr")))
+
+  # Assign names per options passed to function
+  names(data_pred) <- dplyr::all_of(c(id, pred_xb, event_pr, nonevent_pr))
 
   # Merge this data in with original patient dataset, so we are returning all
   # patients, even though some patients may not have a prediction
@@ -163,11 +185,8 @@ generate_pred <- function(data,
       data %>%
         dplyr::left_join(
           data_pred %>%
-            select(.env$id, pred_xb, event_pr, nonevent_pr) %>%
-            #select(.env$id, .data$pred_xb, .data$event_pr, .data$nonevent_pr) %>%
             # Drop variables if all NA (event_pr/nonevent_pr for linear/quantile models)
             select(where(~ !all(is.na(.x)))),
-          #by = .env$id
           by = id
         )
     )

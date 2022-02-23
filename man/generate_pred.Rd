@@ -11,8 +11,11 @@ generate_pred(
   id = "id",
   covariate = "covariate",
   value = "value",
-  outcometime = 5,
-  starttime = 0
+  pred_xb = "pred_xb",
+  event_pr = "event_pr",
+  nonevent_pr = "nonevent_pr",
+  starttime = 0,
+  outcometime = 5
 )
 }
 \arguments{
@@ -28,9 +31,15 @@ generate_pred(
 
 \item{value}{Name of the variable in the "coefficients" data containing coefficient value. Default is "value"}
 
-\item{outcometime}{For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.}
+\item{pred_xb}{Name for the linear predictor variable in the returned dataframe. Default is "pred_xb"}
+
+\item{event_pr}{Name for the event probability variable in the returned dataframe. Default is "event_pr"}
+
+\item{nonevent_pr}{Name for the non-event probability variable in the returned dataframe. Default is "nonevent_pr"}
 
 \item{starttime}{For survival models, the starting timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 0 years (time of surgery).}
+
+\item{outcometime}{For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.}
 }
 \value{
 dataframe
