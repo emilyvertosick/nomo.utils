@@ -62,8 +62,11 @@ This function generates the following variables:
   id <span class="op">=</span> <span class="st">"id"</span>,
   covariate <span class="op">=</span> <span class="st">"covariate"</span>,
   value <span class="op">=</span> <span class="st">"value"</span>,
-  outcometime <span class="op">=</span> <span class="fl">5</span>,
-  starttime <span class="op">=</span> <span class="fl">0</span>
+  pred_xb <span class="op">=</span> <span class="st">"pred_xb"</span>,
+  event_pr <span class="op">=</span> <span class="st">"event_pr"</span>,
+  nonevent_pr <span class="op">=</span> <span class="st">"nonevent_pr"</span>,
+  starttime <span class="op">=</span> <span class="fl">0</span>,
+  outcometime <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -81,10 +84,16 @@ This function generates the following variables:
 <dd><p>Name of the variable in "coefficients" data containing covariate name. Default is "covariate"</p></dd>
 <dt>value</dt>
 <dd><p>Name of the variable in the "coefficients" data containing coefficient value. Default is "value"</p></dd>
-<dt>outcometime</dt>
-<dd><p>For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.</p></dd>
+<dt>pred_xb</dt>
+<dd><p>Name for the linear predictor variable in the returned dataframe. Default is "pred_xb"</p></dd>
+<dt>event_pr</dt>
+<dd><p>Name for the event probability variable in the returned dataframe. Default is "event_pr"</p></dd>
+<dt>nonevent_pr</dt>
+<dd><p>Name for the non-event probability variable in the returned dataframe. Default is "nonevent_pr"</p></dd>
 <dt>starttime</dt>
 <dd><p>For survival models, the starting timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 0 years (time of surgery).</p></dd>
+<dt>outcometime</dt>
+<dd><p>For survival models, the desired timepoint for prediction, in whatever unit was used for time to event in creating model. Default is 5 years.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
