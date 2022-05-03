@@ -2,8 +2,8 @@
 # TODO: Update these to be actual tests...
 # This worked...
 # push_final_results(
-#   source_repo = "C:\\Users\\vertosie\\Documents\\GitHub\\unique",
-#   dest_repo = "C:\\Users\\vertosie\\Documents\\GitHub\\results1",
+#   source_repo = "C:\\GitHub\\unique",
+#   dest_repo = "C:\\GitHub\\results1",
 #   dest_subdir = "new_results",
 #   source_files = c("test1.csv", "results\\test2.csv")
 # )
