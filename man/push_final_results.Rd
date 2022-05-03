@@ -6,6 +6,7 @@
 \usage{
 push_final_results(
   source_repo,
+  source_subdir = NULL,
   dest_repo,
   dest_subdir = NULL,
   source_files,
@@ -14,6 +15,8 @@ push_final_results(
 }
 \arguments{
 \item{source_repo}{The file path for the git repository that is the source of the files}
+
+\item{source_subdir}{The name of the subdirectory in which the source files are located. Default is NULL}
 
 \item{dest_repo}{The file path for the destination git repository}
 
