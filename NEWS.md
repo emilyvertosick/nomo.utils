@@ -1,5 +1,7 @@
 # nomo.utils (development version)
 
+* Updated `push_final_results` to have a "source_subdir" option.
+
 * Updated `generate_pred` function to allow user to specify names for the returned linear predictor and predicted event and survival probabilities.
 
 * Updated packages and code for `generate_pred` so that this function works with updated `rlang` package.
