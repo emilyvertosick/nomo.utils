@@ -246,25 +246,20 @@ generate_coefs <- function(data,
         dist = "loglogistic"
       )
 
-    # Predict from model to calculate c-index
-    regression_pred <-
-      model_data %>%
-      mutate(
-        regression_xb =
-          predict(regression_model, type = "linear")
-      )
+    # 7/7/2022: If the dataset is very large then calculating c-index with Hmisc
+    # is extremely slow - updating code to use concordance from survival package
+    # which allows us to skip several steps and this will run faster
+
+    regression_concordance <-
+      survival::concordance(regression_model) %>%
+      purrr::pluck("concordance")
 
     # Calculate c-index
     regression_stats <-
-      Hmisc::rcorr.cens(
-        regression_pred$regression_xb,
-        survival::Surv(regression_pred %>% pull(outcome[1]),
-                       regression_pred %>% pull(outcome[2])
-        )
+      tibble(
+        covariate = "C-index",
+        value = regression_concordance
       ) %>%
-      enframe(name = "covariate") %>%
-      filter(.data$covariate == "C Index") %>%
-      mutate(covariate = "C-index") %>% # To match variable labels
       dplyr::bind_rows(
         tibble(
           covariate = "Model N",

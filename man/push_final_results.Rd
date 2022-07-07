@@ -26,15 +26,9 @@ push_final_results(
 
 \item{commit_message}{Message to attach to the commits for both source and destination repository (optional)}
 }
-\value{
-
-}
 \description{
 This function takes a source repository, a destination repository, and a list of files to be copied
 It commits and pushes any changes to the source repository, and then copies the files from the
 source repository to the destination repository. After files are copied, they are staged, committed and pushed to the
 destination repository.
-}
-\examples{
-
 }
