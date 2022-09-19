@@ -104,7 +104,8 @@ push_final_results <-
     # Copy results files from source repo folder to destination repo folder/subfolder
     file.copy(
       from = source_files_fullpath,
-      to = dest_fullpath
+      to = dest_fullpath,
+      overwrite = TRUE
     )
 
     # Stage and commit all new files
