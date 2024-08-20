@@ -3,7 +3,7 @@
 
 mtcars_id <-
   mtcars %>%
-  dplyr::mutate(
+  mutate(
     id = 1:n(),
     model_weights = ifelse(drat >= 3 & drat <= 4, 0.75, 1)
   )

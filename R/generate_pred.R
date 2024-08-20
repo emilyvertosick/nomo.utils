@@ -47,10 +47,10 @@ generate_pred <- function(data,
   }
 
   # Confirm predicted final variables don't already exist in dataframe
-  if(length(intersect(dplyr::all_of(c(pred_xb, event_pr, nonevent_pr)), names(data))) != 0) {
+  if(length(intersect(c(pred_xb, event_pr, nonevent_pr), names(data))) != 0) {
     stop(glue("Variables named ",
               "{glue::glue_collapse(
-              intersect(dplyr::all_of(c(pred_xb, event_pr, nonevent_pr)), names(data)),
+              intersect(c(pred_xb, event_pr, nonevent_pr), names(data)),
               sep = ', ',
               last = ' and ')} ",
               "already exist in this dataset. Please choose different names for the output variables."),
@@ -175,7 +175,7 @@ generate_pred <- function(data,
     select(dplyr::all_of(c(id, "pred_xb", "event_pr", "nonevent_pr")))
 
   # Assign names per options passed to function
-  names(data_pred) <- dplyr::all_of(c(id, pred_xb, event_pr, nonevent_pr))
+  names(data_pred) <- c(id, pred_xb, event_pr, nonevent_pr)
 
   # Merge this data in with original patient dataset, so we are returning all
   # patients, even though some patients may not have a prediction

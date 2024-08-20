@@ -99,7 +99,11 @@ test_that("function works correctly for all model types when no covariates speci
   )
 
   # quantile
-  expect_error(
+  # 8/20/2024: As of 8/20/2024 there is warning about solution being non-unique
+  # This is fine for now as we likely aren't doing quantile models with no covariates
+  # This is basically to check
+  # expect_error(
+  testthat::expect_warning(
     generate_coefs(
       data = mtcars_id,
       outcome = c("mpg"),
@@ -108,7 +112,8 @@ test_that("function works correctly for all model types when no covariates speci
       model_type = "quantile",
       quantile_tau = c(0.5)
     ),
-    NA
+    regexp = "nonunique"
+    # NA
   )
 
 })

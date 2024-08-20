@@ -284,18 +284,20 @@ generate_coefs <- function(data,
         tau = quantile_tau
       )
 
-    # For linear, only need to save out modelN
+    # For quantile, only need to save out modelN
     # 1 row per tau, so that it carries through if reshaping is necessary
     regression_stats <-
-      list(tau = quantile_tau,
-           covariate = "Model N",
-           value = nrow(model_data)
-      ) %>%
-      purrr::cross_df()
+      tidyr::expand_grid(
+        tau = quantile_tau,
+        covariate = "Model N",
+        value = nrow(model_data)
+      )
 
   }
 
   # Save out coefficients using broom::tidy and merge in any other statistics needed
+  # TODO: Is there a better way to deal with "no visible binding" note?
+  term <- estimate <- NULL
   regression_coefs <-
     broom::tidy(regression_model) %>%
     # Convert scaling parameter from log scale
@@ -316,7 +318,7 @@ generate_coefs <- function(data,
         )
     ) %>%
     # Rename and keep variables as necessary
-    select(covariate = .data$term, value = .data$estimate, dplyr::starts_with("tau")) %>%
+    select(covariate = term, value = estimate, dplyr::starts_with("tau")) %>%
     # Merge in other statistics (N, AUC, C index)
     dplyr::bind_rows(regression_stats)
 

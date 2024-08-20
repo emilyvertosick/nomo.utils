@@ -15,3 +15,7 @@
 # nomo.utils 0.1.0
 
 * First release
+
+# nomo.utils 0.1.1
+
+* Updated packages and functions to remove deprecated functions and syntax.
