@@ -1,5 +1,7 @@
 # nomo.utils (development version)
 
+* Updated packages and functions to remove deprecated functions and syntax.
+
 * Updated `generate_coefs` function to use the `concordance` function from the **survival** package rather than using the **Hmisc** package as the `concordance` function is faster when working with large datasets. Removed **Hmisc** as a dependency.
 
 * Updated `push_final_results` to have a "source_subdir" option.
@@ -15,7 +17,3 @@
 # nomo.utils 0.1.0
 
 * First release
-
-# nomo.utils 0.1.1
-
-* Updated packages and functions to remove deprecated functions and syntax.
