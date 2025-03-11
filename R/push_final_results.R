@@ -12,7 +12,7 @@
 #' @param source_files A vector of files to be moved from the source repository to the destination repository
 #' @param commit_message Message to attach to the commits for both source and destination repository (optional)
 #'
-#'
+#' @export
 push_final_results <-
   function(
     source_repo,
