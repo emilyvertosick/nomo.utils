@@ -3,7 +3,6 @@ on:
     branches:
       - main
       - master
-      - bugfix/fix-actions-add-renv
     tags:
       - '*'
 
@@ -13,58 +12,27 @@ jobs:
   pkgdown:
     runs-on: ubuntu-latest
     env:
-      RSPM: https://packagemanager.rstudio.com/cran/__linux__/focal/latest
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-r@v2
-        id: install-r
+        with:
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install system dependencies for stringi
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libicu66 libicu-dev
+          sudo apt-get install -y libicu-dev
+          echo "STRINGI_DISABLE_ICU_BUNDLE=1" >> $GITHUB_ENV
 
-          # Alternative approach if above doesn't work
-          if [ $? -ne 0 ]; then
-            # Try to find available ICU packages
-            echo "Searching for available ICU packages..."
-            apt-cache search libicu | grep -i libicu
-
-            # Try installing libicu from focal repos
-            sudo apt-get install -y libicu-dev
-
-            # Configure stringi to use system ICU
-            echo "STRINGI_DISABLE_ICU_BUNDLE=1" >> ~/.Renviron
-            echo "INCLUDE_DIR=/usr/include" >> ~/.Renviron
-            echo "LIB_DIR=/usr/lib" >> ~/.Renviron
-          fi
-
-      - name: Restore packages using renv
-        run: |
-          # Set environment variables for stringi to use system ICU
-          Sys.setenv(STRINGI_DISABLE_ICU_BUNDLE=1)
-
-          if (file.exists("renv.lock")) {
-            message("Found renv.lock; restoring packages with rebuild of stringi")
-            renv::restore(rebuild = "stringi")
-          } else {
-            message("No renv.lock found; installing dependencies via remotes")
-            remotes::install_deps(dependencies = TRUE)
-          }
-        shell: Rscript {0}
-
-      - name: Cache renv library
-        uses: actions/cache@v3
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          path: renv/library
-          key: ${{ runner.os }}-renv-${{ hashFiles('renv.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-renv-
+          extra-packages: any::pkgdown
+          needs: website
 
       - name: Install package
         run: R CMD INSTALL .
@@ -73,4 +41,5 @@ jobs:
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
+          pkgdown::deploy_to_branch(new_process = FALSE)
+        shell: Rscript {0}
