@@ -5,7 +5,7 @@ on:
       - master
       - bugfix/fix-actions-add-renv
     tags:
-      -'*'
+      - '*'
 
 name: pkgdown
 
@@ -24,33 +24,24 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install pak and query dependencies
+      - name: Restore packages using renv
         run: |
-          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
-          saveRDS(pak::pkg_deps("local::.", dependencies = TRUE), ".github/r-depends.rds")
+          if (file.exists("renv.lock")) {
+            message("Found renv.lock; restoring packages using renv")
+            renv::restore()
+          } else {
+            message("No renv.lock found; installing dependencies via remotes")
+            remotes::install_deps(dependencies = TRUE)
+          }
         shell: Rscript {0}
 
-      - name: Restore R package cache
+      - name: Cache renv library
         uses: actions/cache@v3
         with:
-          path: |
-            ${{ env.R_LIBS_USER }}/*
-            !${{ env.R_LIBS_USER }}/pak
-          key: ubuntu-latest-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
-          restore-keys: ubuntu-latest-${{ steps.install-r.outputs.installed-r-version }}-1-
-
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        run: |
-          pak::local_system_requirements(execute = TRUE)
-          pak::pkg_system_requirements("pkgdown", execute = TRUE)
-        shell: Rscript {0}
-
-      - name: Install dependencies
-        run: |
-          pak::local_install_dev_deps(upgrade = TRUE, dependencies = c("all", "Config/Needs/website"))
-          pak::pkg_install("pkgdown")
-        shell: Rscript {0}
+          path: renv/library
+          key: ${{ runner.os }}-renv-${{ hashFiles('renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
 
       - name: Install package
         run: R CMD INSTALL .
