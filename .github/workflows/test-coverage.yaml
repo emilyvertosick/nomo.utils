@@ -3,11 +3,12 @@ on:
     branches:
       - main
       - master
+      - bugfix/fix-actions-add-renv
   pull_request:
     branches:
       - main
       - master
-
+      - bugfix/fix-actions-add-renv
 name: test-coverage
 
 jobs:

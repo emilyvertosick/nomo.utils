@@ -3,6 +3,7 @@ on:
     branches:
       - main
       - master
+      - bugfix/fix-actions-add-renv
     tags:
       - '*'
 
