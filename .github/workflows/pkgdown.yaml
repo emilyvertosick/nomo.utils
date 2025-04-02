@@ -24,6 +24,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - name: Install system dependencies for stringi
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libicu-dev
+
       - name: Restore packages using renv
         run: |
           if (file.exists("renv.lock")) {
