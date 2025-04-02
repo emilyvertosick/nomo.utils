@@ -26,10 +26,28 @@ jobs:
       - name: Install system dependencies for stringi
         run: |
           sudo apt-get update
-          sudo apt-get install -y libicu-dev
+          sudo apt-get install -y libicu66 libicu-dev
+
+          # Alternative approach if above doesn't work
+          if [ $? -ne 0 ]; then
+            # Try to find available ICU packages
+            echo "Searching for available ICU packages..."
+            apt-cache search libicu | grep -i libicu
+
+            # Try installing libicu from focal repos
+            sudo apt-get install -y libicu-dev
+
+            # Configure stringi to use system ICU
+            echo "STRINGI_DISABLE_ICU_BUNDLE=1" >> ~/.Renviron
+            echo "INCLUDE_DIR=/usr/include" >> ~/.Renviron
+            echo "LIB_DIR=/usr/lib" >> ~/.Renviron
+          fi
 
       - name: Restore packages using renv
         run: |
+          # Set environment variables for stringi to use system ICU
+          Sys.setenv(STRINGI_DISABLE_ICU_BUNDLE=1)
+
           if (file.exists("renv.lock")) {
             message("Found renv.lock; restoring packages with rebuild of stringi")
             renv::restore(rebuild = "stringi")
