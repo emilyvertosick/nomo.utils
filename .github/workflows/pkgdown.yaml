@@ -38,9 +38,11 @@ jobs:
       - name: Install package
         run: R CMD INSTALL .
 
-      - name: Build and deploy pkgdown site
+      - name: Configure Git
         run: |
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          pkgdown::deploy_to_branch(new_process = FALSE)
+
+      - name: Deploy pkgdown site
+        run: pkgdown::deploy_to_branch(new_process = FALSE)
         shell: Rscript {0}
