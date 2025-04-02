@@ -27,8 +27,8 @@ jobs:
       - name: Restore packages using renv
         run: |
           if (file.exists("renv.lock")) {
-            message("Found renv.lock; restoring packages using renv")
-            renv::restore()
+            message("Found renv.lock; restoring packages with rebuild of stringi")
+            renv::restore(rebuild = "stringi")
           } else {
             message("No renv.lock found; installing dependencies via remotes")
             remotes::install_deps(dependencies = TRUE)
