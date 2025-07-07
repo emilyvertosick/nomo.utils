@@ -1,3 +1,5 @@
+# nomo.utils 0.2.0
+
 # nomo.utils (0.2.0)
 
 * Updated packages and functions to remove deprecated functions and syntax.
