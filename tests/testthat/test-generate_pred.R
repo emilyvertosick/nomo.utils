@@ -47,6 +47,16 @@ mtcars_quantile <-
     quantile_tau = c(0.5)
   )
 
+mtcars_quantile_mult <-
+  generate_coefs(
+    data = mtcars_id,
+    outcome = c("mpg"),
+    covars = c("qsec"),
+    id = "id",
+    model_type = "quantile",
+    quantile_tau = c(0.25, 0.5, 0.75)
+  )
+
 test_that("function works correctly for all model types", {
 
   # linear
@@ -362,9 +372,36 @@ test_that("no error and no variable name if variable name specified for non-retu
       nonevent_pr = "new_nonevent"
     )
 
+  # 7/7/2025: save out list of names since names now have tau value attached (even if only 1 variable)
+  quantile_names <- glue("new_xb", unique(mtcars_quantile$tau)*100)
+
   expect_true(
-    all(c("new_xb") %in% names(mtcars_quantile_newnames)) == TRUE &
+    all(quantile_names %in% names(mtcars_quantile_newnames)) == TRUE &
       all(c("new_event", "new_nonevent") %in% names(mtcars_quantile_newnames)) == FALSE
+  )
+
+})
+
+# 7/7/2025: New quantile testing
+test_that("predictions generated correctly if multiple tau values (multiple quantile models)", {
+
+  # predict for coefficients with multiple tau values
+  pred_mult_quant <-
+    generate_pred(
+      data = mtcars_id,
+      coefficients = mtcars_quantile_mult,
+      model_type = "quantile",
+      pred_xb = "mult_pred_xb"
+    )
+
+  # number of tau values
+  tau_coefs <- unique(mtcars_quantile_mult$tau)
+
+  # testing that # of tau = # of variables
+  # and also that variable suffixes match to tau*100
+  expect_true(
+    length(tau_coefs) == length(names(pred_mult_quant %>% select(contains("mult_pred_xb")))) &
+      all(tau_coefs*100 == names(pred_mult_quant %>% select(contains("mult_pred_xb"))) %>% stringr::str_replace_all("mult_pred_xb", ""))
   )
 
 })
