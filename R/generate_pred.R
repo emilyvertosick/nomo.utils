@@ -144,38 +144,93 @@ generate_pred <- function(data,
     # Create variable for intercept
     mutate(Intercept = 1)
 
-  # Save out the risk formula for the model
-  model_formula <-
-    coefficients_pred %>%
-    mutate(
-      covar_formula = glue("{.data$covariate_name} * {.data$coef_value}")
-    ) %>%
-    pull(.data$covar_formula) %>%
-    paste0(collapse = " + ")
+  # QUANTILE REGRESSION #
+  # Since there can be multiple tau values passed which would then generate multiple sets of predictions
+  # This will be done separately
 
-  # For all patients with data available, calculate linear predictor and predictions
-  data_pred <-
-    data_pred %>%
-    mutate(
-      # Linear predictor - for linear/quantile, this is all that will be kept
-      pred_xb = eval(parse(text = model_formula)),
-      # Event probability - for logistic/survival, otherwise NA for linear/quantile
-      event_pr =
-        case_when(
-          # Logistic model - this code gives event probability, also calculate non-event probability
-          model_type == "logistic" ~ exp(.data$pred_xb) / (1 + exp(.data$pred_xb)),
-          # Survival model - updated code to give event probability, will calculate non-event/survival separately
-          model_type == "survival" ~
-        1 - ((1 + (exp(-1 * .data$pred_xb) * .env$starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * .env$outcometime) ^ (1 / scaling)))
-        ),
-      # Non-event/survival probability - not needed for linear/quantile
-      nonevent_pr = 1 - .data$event_pr
-    ) %>%
-    # Keep only necessary variables
-    select(dplyr::all_of(c(id, "pred_xb", "event_pr", "nonevent_pr")))
+  if (model_type == "quantile") {
 
-  # Assign names per options passed to function
-  names(data_pred) <- c(id, pred_xb, event_pr, nonevent_pr)
+      map_pred <-
+        coefficients_pred %>%
+        # nest coefficients
+        tidyr::nest(df_coefs = -c(.data$tau)) %>%
+        # covariate formula for each
+        mutate(
+          covar_formula =
+            purrr::pmap_chr(
+              list(.data$df_coefs),
+              ~ glue("{.x$covariate_name} * {.x$coef_value}") %>%
+                paste0(collapse = " + ")
+            ),
+          # predict using formula
+          df_pred =
+            purrr::pmap(
+              list(.data$covar_formula),
+              ~ data_pred %>%
+                mutate(
+                  pred_xb = eval(parse(text = ..1))
+                ) %>%
+                select(c(id, pred_xb))
+              # TODO: Check this works if variable wasn't originally named id
+            )
+        )
+
+      # Unnest and re-shape
+      data_pred_long <-
+        map_pred %>%
+        mutate(tau = .data$tau*100) %>%
+        select(.data$tau, .data$df_pred) %>%
+        tidyr::unnest(.data$df_pred)
+
+      # assign names
+      names(data_pred_long) <- c("tau", id, pred_xb)
+
+      # reshape to wide
+      data_pred <-
+        data_pred_long %>%
+        tidyr::pivot_wider(
+          names_from = "tau",
+          values_from = dplyr::all_of(pred_xb),
+          names_prefix = pred_xb
+        )
+
+    # LINEAR / LOGISTIC / SURVIVAL
+  } else if (model_type %in% c("linear", "logistic", "survival")) {
+
+    # Save out the risk formula for the model
+    model_formula <-
+      coefficients_pred %>%
+      mutate(
+        covar_formula = glue("{.data$covariate_name} * {.data$coef_value}")
+      ) %>%
+      pull(.data$covar_formula) %>%
+      paste0(collapse = " + ")
+
+    # For all patients with data available, calculate linear predictor and predictions
+    data_pred <-
+      data_pred %>%
+      mutate(
+        # Linear predictor - for linear/quantile, this is all that will be kept
+        pred_xb = eval(parse(text = model_formula)),
+        # Event probability - for logistic/survival, otherwise NA for linear/quantile
+        event_pr =
+          case_when(
+            # Logistic model - this code gives event probability, also calculate non-event probability
+            model_type == "logistic" ~ exp(.data$pred_xb) / (1 + exp(.data$pred_xb)),
+            # Survival model - updated code to give event probability, will calculate non-event/survival separately
+            model_type == "survival" ~
+              1 - ((1 + (exp(-1 * .data$pred_xb) * .env$starttime) ^ (1 / scaling)) / (1 + (exp(-1 * .data$pred_xb) * .env$outcometime) ^ (1 / scaling)))
+          ),
+        # Non-event/survival probability - not needed for linear/quantile
+        nonevent_pr = 1 - .data$event_pr
+      ) %>%
+      # Keep only necessary variables
+      select(dplyr::all_of(c(id, "pred_xb", "event_pr", "nonevent_pr")))
+
+    # Assign names per options passed to function
+    names(data_pred) <- c(id, pred_xb, event_pr, nonevent_pr)
+
+  }
 
   # Merge this data in with original patient dataset, so we are returning all
   # patients, even though some patients may not have a prediction

@@ -214,15 +214,9 @@ generate_coefs <- function(data,
            call. = FALSE)
     }
 
-    # Confirm enough events or non-events
-    # event_n <-
-    #   model_data %>%
-    #   # TODO: Okay to use "get" here or is there a better way? .env$outcome[2]??
-    #   dplyr::summarize(sum = sum(get(outcome[2]), na.rm = TRUE)) %>%
-    #   pull()
-
+    # Confirm enough events
     min_event_n <-
-      min(model_data %>% pull(.env$outcome[[2]]) %>% table(), na.rm = TRUE)
+      model_data %>% pull(.env$outcome[[2]]) %>% sum()
 
     if(min_event_n < length(covars)*10) {
       warning(glue("Only {min_event_n} events for {length(covars)} covariates"),
