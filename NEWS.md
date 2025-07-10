@@ -1,3 +1,5 @@
+# nomo.utils (development version)
+
 # nomo.utils (dev)
 
 * Fixed issue with model_weights option/variable name
