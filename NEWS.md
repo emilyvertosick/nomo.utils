@@ -1,6 +1,8 @@
-# nomo.utils 0.2.0
+# nomo.utils (dev)
 
-# nomo.utils (0.2.0)
+* Fixed issue with model_weights option/variable name
+
+# nomo.utils 0.2.0
 
 * Updated packages and functions to remove deprecated functions and syntax.
 

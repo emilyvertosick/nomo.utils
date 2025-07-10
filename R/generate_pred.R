@@ -153,7 +153,7 @@ generate_pred <- function(data,
       map_pred <-
         coefficients_pred %>%
         # nest coefficients
-        tidyr::nest(df_coefs = -c(.data$tau)) %>%
+        tidyr::nest(df_coefs = -c(tau)) %>%
         # covariate formula for each
         mutate(
           covar_formula =
@@ -178,9 +178,9 @@ generate_pred <- function(data,
       # Unnest and re-shape
       data_pred_long <-
         map_pred %>%
-        mutate(tau = .data$tau*100) %>%
-        select(.data$tau, .data$df_pred) %>%
-        tidyr::unnest(.data$df_pred)
+        mutate(tau = tau*100) %>%
+        select(tau, df_pred) %>%
+        tidyr::unnest(df_pred)
 
       # assign names
       names(data_pred_long) <- c("tau", id, pred_xb)

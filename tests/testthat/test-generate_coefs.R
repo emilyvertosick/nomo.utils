@@ -120,7 +120,7 @@ test_that("function works correctly for all model types when no covariates speci
 
 test_that("non-required options work correctly", {
 
-  # model weights
+  # model weights when variable is called "model_weights"
   expect_error(
     generate_coefs(
       data = mtcars_id,
@@ -129,6 +129,19 @@ test_that("non-required options work correctly", {
       id = "id",
       model_type = "linear",
       model_weights = "model_weights"
+    ),
+    NA
+  )
+
+  # model weights when variable is not called "model_weights"
+  expect_error(
+    generate_coefs(
+      data = mtcars_id %>% rename(weight = model_weights),
+      outcome = "mpg",
+      covars = c("wt", "cyl"),
+      id = "id",
+      model_type = "linear",
+      model_weights = "weight"
     ),
     NA
   )
