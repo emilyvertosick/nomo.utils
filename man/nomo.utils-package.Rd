@@ -9,7 +9,7 @@
 This package contains utility functions related to the nomo package.
 }
 \author{
-\strong{Maintainer}: Emily Vertosick \email{vertosie@mskcc.org} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Emily Vertosick \email{vertosie@mskcc.org} (\href{https://orcid.org/0000-0001-6948-9850}{ORCID})
 
 }
 \keyword{internal}

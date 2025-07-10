@@ -109,6 +109,11 @@ generate_coefs <- function(data,
     # Keep only those patients with complete cases
     filter(complete.cases(.))
 
+  # Rename model_weights variable
+  if (!is.null(model_weights)) {
+    model_data <- model_data %>% mutate(model_weights = !!rlang::sym(model_weights))
+  }
+
   # Confirm enough observations (at least 10)
   if(nrow(model_data) < 10) {
     warning("There are less than 10 observations, no model will be created.",
